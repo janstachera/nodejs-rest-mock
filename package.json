@@ -1,7 +1,7 @@
 {
-  "name": "node-rest-shop",
+  "name": "nodejs-rest-training",
   "version": "1.0.0",
-  "description": "REST API Tutorial",
+  "description": "NodeJs REST API Tutorial Project",
   "main": "index.js",
   "scripts": {
     "start": "PORT=3000 nodemon server.js",
