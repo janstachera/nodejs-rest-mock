@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Product = require('../models/product');
 
-const ProductsController = {
+const ProductsDao = {
     getAll: () => Product.find().limit(200).exec(),
     get: (id) => Product.findById(id).exec(),
     create: ({ name, price }) => {
@@ -13,17 +13,16 @@ const ProductsController = {
         return product.save();
     },
     update: ({ id, body }) => {
-        const updateOps = {};
-        for (let ops of body) {
-            updateOps[ops.propName] = ops.value;
+        const updateProps = {};
+        for (let key of Object.keys(body)) {
+            updateProps[key] = body[key];
         }
         return Product.update(
             { _id: id },
-            { $set: updateOps },
-        )
-        .exec();
+            { $set: updateProps },
+        ).exec();
     },
     remove: (id) => Product.remove({ _id: id }).exec(),
 };
 
-module.exports = ProductsController;
+module.exports = ProductsDao;

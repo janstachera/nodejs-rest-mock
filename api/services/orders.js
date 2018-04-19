@@ -2,24 +2,28 @@ const mongoose = require('mongoose');
 const Order = require('../models/order');
 const ProductsController = require('./products');
 
-const OrdersController = {
+const createOrderIfProductExists = (response) => {
+    if (response) {
+        const order = new Order({
+            _id: new mongoose.Types.ObjectId(),
+            productId,
+            quantity,
+        });
+        return order.save();
+    } else {
+        return new Promise((resolve, reject) => {
+            reject('Wrong productId');
+        });
+    }
+};
+
+const OrdersService = {
     getAll: () => Order.find().limit(200).exec(),
     get: (id) => Order.findById(id).exec(),
     create: ({ productId, quantity }) => {
         return ProductsController.get(productId)
         .then((response) => {
-            if (response) {
-                const order = new Order({
-                    _id: new mongoose.Types.ObjectId(),
-                    productId,
-                    quantity,
-                });
-                return order.save();
-            } else {
-                return new Promise((resolve, reject) => {
-                    reject(null);
-                });
-            }
+            return createOrderIfProductExists(response);
         })
         .catch((err) => {
             return new Promise((resolve, reject) => {
@@ -30,4 +34,4 @@ const OrdersController = {
     remove: (id) => Order.remove({ _id: id }).exec(),
 };
 
-module.exports = OrdersController;
+module.exports = OrdersService;

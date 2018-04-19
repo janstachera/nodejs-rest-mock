@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
-const ProductsController = require('../controllers/products');
+const ProductsService = require('../services/products');
 
 router.get('/', (req, res, next) => {
-    ProductsController.getAll()
+    ProductsService.getAll()
         .then((docs) => {
             res.status(200).json(docs);            
         })
@@ -15,7 +15,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    ProductsController.create({
+    ProductsService.create({
             name: req.body.name, 
             price: req.body.price,
         })
@@ -33,23 +33,17 @@ router.post('/', (req, res, next) => {
 });
 
 router.get('/:productId', (req, res, next) => {
-    ProductsController.get(req.params.productId)    
-        .then((doc) => {
-            if (doc) {
-                res.status(200).json(doc);
-            } else {
-                res.status(404).json({
-                    message: "No matching id found",
-                });
-            }
+    ProductsService.get(req.params.productId)    
+        .then((response) => {
+            res.status(200).json(response);
         })
         .catch((err) => {
-            res.status(500).json({error: err});
+            res.status(err.code).json(err);
         });
 });
 
 router.patch('/:productId', (req, res, next) => {
-    ProductsController.update({
+    ProductsService.update({
         id: req.params.productId,
         body: req.body,
     })
@@ -62,7 +56,7 @@ router.patch('/:productId', (req, res, next) => {
 });
 
 router.delete('/:productId', (req, res, next) => {
-    ProductsController.remove(req.params.productId)
+    ProductsService.remove(req.params.productId)
         .then((doc) => {
             res.status(200).json(doc);
         })
