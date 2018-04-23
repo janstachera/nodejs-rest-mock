@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-
 const ProductsService = require('../services/products');
+const { handleError } = require('../utils/error');
 
 router.get('/', (req, res, next) => {
     ProductsService.getAll()
         .then((docs) => {
             res.status(200).json(docs);            
         })
-        .catch((err) => {
-            res.status(500).json({error: err});
+        .catch((error) => {
+            handleError({ res, error });
         });
 });
 
@@ -25,10 +25,8 @@ router.post('/', (req, res, next) => {
                 createdProduct: product,
             });
         })
-        .catch((err) => {
-            res.status(500).json({
-                error: err,
-            });
+        .catch((error) => {
+            handleError({ res, error });
         });    
 });
 
@@ -37,8 +35,8 @@ router.get('/:productId', (req, res, next) => {
         .then((response) => {
             res.status(200).json(response);
         })
-        .catch((err) => {
-            res.status(err.code).json(err);
+        .catch((error) => {
+            handleError({ res, error });
         });
 });
 
@@ -50,8 +48,8 @@ router.patch('/:productId', (req, res, next) => {
     .then((doc) => {
         res.status(200).json(doc);
     })
-    .catch((err) => {
-        res.status(500).json({error: err});
+    .catch((error) => {
+        handleError({ res, error });
     });
 });
 
@@ -60,8 +58,8 @@ router.delete('/:productId', (req, res, next) => {
         .then((doc) => {
             res.status(200).json(doc);
         })
-        .catch((err) => {
-            res.status(500).json({error: err});
+        .catch((error) => {
+            handleError({ res, error });
         });
 });
 

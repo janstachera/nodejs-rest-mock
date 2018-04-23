@@ -2,14 +2,8 @@ const mongoose = require('mongoose');
 const ProductsDao = require('../daos/products');
 
 const ProductsService = {
-    getAll: () => ProductDao.getAll(),
+    getAll: () => ProductsDao.getAll(),
     get: (id) => ProductsDao.get(id)
-        .catch((err) => {
-            return Promise.reject({
-                code: 500,
-                msg: err,
-            });
-        })
         .then((response) => {
             if (response) {
                 return Promise.resolve(response);
@@ -20,7 +14,7 @@ const ProductsService = {
                 });
             }
         }),
-    create: (data) => ProductsDao.create(data),
+    create: ProductsDao.create,
     update: (data) => ProductsDao.update(data),
     remove: (id) => ProductsDao.remove(id),
 };
